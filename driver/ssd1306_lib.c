@@ -107,7 +107,7 @@ int ssd1306_i2c_send(struct ssd1306_i2c_module *module, char *buff, int len)
 }
 
 // Writes a command or data to SSD1306
-void ssd1306_write(struct ssd1306_i2c_module *module, bool check, char data)
+void ssd1306_write_command(struct ssd1306_i2c_module *module, bool check, char data)
 {
     char buff[2];  // Buffer to hold the data to be sent
 
@@ -130,12 +130,12 @@ void ssd1306_set_cursor(struct ssd1306_i2c_module *module, uint8_t line_num, uin
         module->cursor_position = cursor_position;  // Update the cursor position
 
         // Send commands to set the cursor position
-        ssd1306_write(module, true, 0x21);  // Command to set column address
-        ssd1306_write(module, true, cursor_position);  // Starting column address
-        ssd1306_write(module, true, SSD1306_MAX_SEG - 1);  // Ending column address
-        ssd1306_write(module, true, 0x22);  // Command to set page address
-        ssd1306_write(module, true, line_num);  // Starting page address (line number)
-        ssd1306_write(module, true, SSD1306_MAX_LINE);  // Ending page address (max line)
+        ssd1306_write_command(module, true, 0x21);  // Command to set column address
+        ssd1306_write_command(module, true, cursor_position);  // Starting column address
+        ssd1306_write_command(module, true, SSD1306_MAX_SEG - 1);  // Ending column address
+        ssd1306_write_command(module, true, 0x22);  // Command to set page address
+        ssd1306_write_command(module, true, line_num);  // Starting page address (line number)
+        ssd1306_write_command(module, true, SSD1306_MAX_LINE);  // Ending page address (max line)
     }
 }
 
@@ -169,11 +169,11 @@ void ssd1306_print_char(struct ssd1306_i2c_module *module, unsigned char c)
     // Draw the character
     if (c != '\n') {
         for (temp = 0; temp < module->font_size; temp++) {
-            ssd1306_write(module, false, ssd1306_font[pos_line][temp]);  // Send each column of the character
+            ssd1306_write_command(module, false, ssd1306_font[pos_line][temp]);  // Send each column of the character
             module->cursor_position++;  // Move cursor to the right
         }
 
-        ssd1306_write(module, false, 0x00);  // Add space between characters
+        ssd1306_write_command(module, false, 0x00);  // Add space between characters
         module->cursor_position++;
     }
 }
@@ -189,23 +189,25 @@ void ssd1306_print_string(struct ssd1306_i2c_module *module, unsigned char *str)
 // Sets the brightness of the SSD1306 screen
 void ssd1306_set_brightness(struct ssd1306_i2c_module *module, uint8_t brightness)
 {
-    ssd1306_write(module, true, 0x81);  // Command to set brightness
-    ssd1306_write(module, true, brightness);  // Send brightness level (0-255)
+    ssd1306_write_command(module, true, 0x81);  // Command to set brightness
+    ssd1306_write_command(module, true, brightness);  // Send brightness level (0-255)
 }
 
 // Clears a specific page (line) on the screen
 void ssd1306_clear_page(struct ssd1306_i2c_module *module, uint8_t line)
 {
     ssd1306_set_cursor(module, line, 0);  // Set cursor to the start of the line
-    for (int i = 0; i < SSD1306_MAX_SEG; i++) {
-        ssd1306_write(module, false, 0x00);  // Write 0 to clear the line
+    int i;
+    for (i = 0; i < SSD1306_MAX_SEG; i++) {
+        ssd1306_write_command(module, false, 0x00);  // Write 0 to clear the line
     }
 }
 
 // Clears the entire screen
 void ssd1306_clear_full(struct ssd1306_i2c_module *module)
 {
-    for (int i = 0; i <= SSD1306_MAX_LINE; i++) {
+    int i;
+    for (i = 0; i <= SSD1306_MAX_LINE; i++) {
         ssd1306_clear_page(module, i);  // Clear each line one by one
     }
 }
@@ -216,12 +218,12 @@ int ssd1306_display_init(struct ssd1306_i2c_module *module)
     msleep(100);  // Wait for 100ms to allow the display to power on
 
     // Send initialization commands to the display
-    ssd1306_write(module, true, 0xAE);  // Turn off the display
-    ssd1306_write(module, true, 0xA8);  // Set multiplex ratio
-    ssd1306_write(module, true, 0x3F);  // 64 COM lines
+    ssd1306_write_command(module, true, 0xAE);  // Turn off the display
+    ssd1306_write_command(module, true, 0xA8);  // Set multiplex ratio
+    ssd1306_write_command(module, true, 0x3F);  // 64 COM lines
     // Additional initialization commands go here...
 
-    ssd1306_write(module, true, 0xAF);  // Turn on the display
+    ssd1306_write_command(module, true, 0xAF);  // Turn on the display
 
     // Display welcome message
     ssd1306_set_cursor(module, 0, 0);

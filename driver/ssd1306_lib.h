@@ -31,7 +31,7 @@ struct ssd1306_i2c_module {
 int ssd1306_i2c_send(struct ssd1306_i2c_module *module, char *buff, int len);
 
 // Function to write command or data to SSD1306
-void ssd1306_write(struct ssd1306_i2c_module *module, bool check, char data);
+void ssd1306_write_command(struct ssd1306_i2c_module *module, bool check, char data);
 
 // Function to set the cursor position on the SSD1306 screen
 void ssd1306_set_cursor(struct ssd1306_i2c_module *module, uint8_t line_num, uint8_t cursor_position);

@@ -78,7 +78,7 @@ static struct platform_driver gpio_btn_driver =
         .name = "gpio_button_driver",   // Driver name
         .of_match_table = of_match_ptr(gpio_btn_dt_ids),     // Device Tree matching
         .owner = THIS_MODULE,           // Indicates this module is the owner of the driver
-    };
+    },
 };
 
 /* File operations structure for the character device */
@@ -271,13 +271,13 @@ static irqreturn_t btn5_irq_handler(int irq, void *dev_id) {
 /* Open function for the device file */
 static int btn_open(struct inode *inode, struct file *file) 
 {
-    pr_info("System call open() Button Driver: Device file opened\n");
+    pr_info("Button Driver: Device file opened\n");
     return 0;
 }
 
 /* Release function for the device file */
 static int btn_release(struct inode *inode, struct file *file) {
-    pr_info("System call close() Button Driver: Device file closed\n");
+    pr_info("Button Driver: Device file closed\n");
     return 0;
 }
 
@@ -333,7 +333,7 @@ static int __init gpio_btn_init(void) {
     }
 
     // Create the device file in /dev/
-    if (device_create(btn_dev.btn_class, NULL, btn_dev.dev_num, NULL, "gpio_button_device") == NULL) {
+    if (device_create(btn_dev.btn_class, NULL, btn_dev.dev_num, NULL, "button_snake") == NULL) {
         pr_err("GPIO Button Driver: Failed to create device file\n");
         goto destroy_class;
     }
