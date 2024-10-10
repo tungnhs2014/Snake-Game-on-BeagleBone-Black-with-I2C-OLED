@@ -65,7 +65,7 @@ static irqreturn_t btn5_irq_handler(int irq, void *dev_id);
 
 /* Device tree match table */
 static const struct of_device_id gpio_btn_dt_ids[] = {
-    { .compatible = "BBB,gpio-button" }, // Match compatible node in Device tree
+    { .compatible = "BBB-gpio-button" }, // Match compatible node in Device tree
     { /* sentinel */ }
 };
 
@@ -333,7 +333,7 @@ static int __init gpio_btn_init(void) {
     }
 
     // Create the device file in /dev/
-    if (device_create(btn_dev.btn_class, NULL, btn_dev.dev_num, NULL, "button_snake") == NULL) {
+    if (device_create(btn_dev.btn_class, NULL, btn_dev.dev_num, NULL, "my_button_snake") == NULL) {
         pr_err("GPIO Button Driver: Failed to create device file\n");
         goto destroy_class;
     }

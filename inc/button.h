@@ -20,7 +20,7 @@
 #include <termios.h>
 
 // Define the path to the button device file for handling button inputs.
-#define SSD1306_BUTTON_FILE "/dev/button_snake"
+#define SSD1306_BUTTON_FILE "/dev/my_button_snake"
 
 // Define constants representing directional buttons and the ENTER button.
 #define UP          1

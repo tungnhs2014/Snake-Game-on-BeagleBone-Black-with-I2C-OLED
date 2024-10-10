@@ -152,7 +152,7 @@ static ssize_t ssd1306_write(struct file *filp, const char __user *user_buf, siz
 static int __init ssd1306_init(void)
 {
     /* Allocate a major and minor device number */
-    if (alloc_chrdev_region(&ssd1306_dev_instance.dev_num, 0, 1, "ssd1306_dev")) {
+    if (alloc_chrdev_region(&ssd1306_dev_instance.dev_num, 0, 1, "my_ssd1306_dev")) {
         pr_err("ssd1306: Failed to allocate character device number\n");
         return -1;
     }
